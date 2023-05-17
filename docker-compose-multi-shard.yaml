@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  mongo1:
+    container_name: mongo1
+    image: mongo:latest
+    command: mongod --replSet dbrs
+    volumes:
+      - ./scripts/rs-init.sh:/scripts/rs-init.sh
+    networks:
+      - mongo-network
+    ports:
+      - 27217:27017
+    depends_on:
+      - mongo2
+      - mongo3
+    restart: always
+
+  mongo2:
+    container_name: mongo2
+    image: mongo:latest
+    command: mongod --replSet dbrs
+    networks:
+      - mongo-network
+    ports:
+      - 27218:27017
+    restart: always
+
+  mongo3:
+    container_name: mongo3
+    image: mongo:latest
+    command: mongod --replSet dbrs
+    networks:
+      - mongo-network
+    ports:
+      - 27219:27017
+    restart: always
+
+networks:
+  mongo-network:
+    driver: bridge
