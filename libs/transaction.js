@@ -30,7 +30,7 @@ async function runTransaction(client) {
     /**
      * make any mistake
      */
-    console.log("aykut: ", aykut); // aykut is not defined
+    // console.log("aykut: ", aykut); // aykut is not defined
     /**
      * make any mistake
      */

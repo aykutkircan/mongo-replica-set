@@ -38,6 +38,7 @@ async function initiliaze() {
       console.log("Sunucu 3000 numaralı porta başlatıldı.");
     });
   } catch (error) {
+    console.log("Something goes wrong", error.message);
     process.exit(0);
   }
 }

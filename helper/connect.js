@@ -4,7 +4,7 @@ const url1 = "mongodb://admin:admin@localhost:27100/testdb?authSource=admin";
 const url2 =
   "mongodb+srv://sharding-user-dev:ngHsC4kn7KLqf8pS@cluster0.bjwtgkq.mongodb.net/sharding-dev";
 const url3 =
-  "mongodb://admin:admin@localhost:27217/sharding-dev?authSource=admin";
+  "mongodb://sharding-user:admin@localhost:27017/sharding-dev?authSource=admin";
 
 async function connectDB(SHARDING) {
   const connectUrl = SHARDING ? url3 : url1;
