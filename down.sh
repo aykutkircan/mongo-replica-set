@@ -1,5 +1,10 @@
 #!/bin/bash
 
-export COMPOSE_PROJECT_NAME=mongodbdocker
-docker-compose --file docker-compose-multi-shard.yaml down --volumes
-rm -rf ./mongodb.key
+export COMPOSE_PROJECT_NAME=docker
+
+## Environment
+ENV="$1"
+
+docker-compose --file "docker-compose-${ENV}.yaml" down --volumes
+
+rm -rf ./mongo-shard-scripts/${ENV}/mongodb.key

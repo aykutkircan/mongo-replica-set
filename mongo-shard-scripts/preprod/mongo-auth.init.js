@@ -12,12 +12,12 @@ admin.createUser({
 
 admin.auth("admin", "admin");
 admin.createUser({
-  user: "sharding-user",
+  user: "sharding-user-preprod",
   pwd: "admin",
   roles: [
     {
       role: "readWrite",
-      db: "sharding-dev",
+      db: "sharding-preprod",
     },
   ],
 });

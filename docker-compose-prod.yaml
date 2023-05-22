@@ -1,0 +1,99 @@
+version: '3.6'
+services:
+
+  # Config servers for metadata
+  prod-configserver-01:
+    image: mongo
+    command: mongod --auth --port 27017 --configsvr --replSet mongo-configserver --dbpath /data/db --keyFile /mongodb.key
+    volumes:
+      - ./mongo-shard-scripts/prod/mongodb.key:/mongodb.key
+      - ./mongo-shard-scripts/prod/mongo-configserver.init.js:/mongo-configserver.init.js
+  prod-configserver-02:
+    image: mongo
+    command: mongod --auth --port 27017 --configsvr --replSet mongo-configserver --dbpath /data/db --keyFile /mongodb.key
+    volumes:
+      - ./mongo-shard-scripts/prod/mongodb.key:/mongodb.key
+  prod-configserver-03:
+    image: mongo
+    command: mongod --auth --port 27017 --configsvr --replSet mongo-configserver --dbpath /data/db --keyFile /mongodb.key
+    volumes:
+      - ./mongo-shard-scripts/prod/mongodb.key:/mongodb.key
+
+  # First shard
+  prod-shard-01a:
+    image: mongo
+    command: mongod --auth --port 27018 --shardsvr --replSet mongo-shard-01 --dbpath /data/db --keyFile /mongodb.key
+    volumes:
+      - ./mongo-shard-scripts/prod/mongodb.key:/mongodb.key
+      - ./mongo-shard-scripts/prod/mongo-shard-01.init.js:/mongo-shard-01.init.js
+  prod-shard-01b:
+    image: mongo
+    command: mongod --auth --port 27018 --shardsvr --replSet mongo-shard-01 --dbpath /data/db --keyFile /mongodb.key
+    volumes:
+      - ./mongo-shard-scripts/prod/mongodb.key:/mongodb.key
+  prod-shard-01c:
+    image: mongo
+    command: mongod --auth --port 27018 --shardsvr  --replSet mongo-shard-01 --dbpath /data/db --keyFile /mongodb.key
+    volumes:
+      - ./mongo-shard-scripts/prod/mongodb.key:/mongodb.key
+
+  # Second shard
+  prod-shard-02a:
+    image: mongo
+    command: mongod --auth --port 27019 --shardsvr --replSet mongo-shard-02 --dbpath /data/db --keyFile /mongodb.key
+    volumes:
+      - ./mongo-shard-scripts/prod/mongodb.key:/mongodb.key
+      - ./mongo-shard-scripts/prod/mongo-shard-02.init.js:/mongo-shard-02.init.js
+  prod-shard-02b:
+    image: mongo
+    command: mongod --auth --port 27019 --shardsvr --replSet mongo-shard-02 --dbpath /data/db --keyFile /mongodb.key
+    volumes:
+      - ./mongo-shard-scripts/prod/mongodb.key:/mongodb.key
+  prod-shard-02c:
+    image: mongo
+    command: mongod --auth --port 27019 --shardsvr --replSet mongo-shard-02 --dbpath /data/db --keyFile /mongodb.key
+    volumes:
+      - ./mongo-shard-scripts/prod/mongodb.key:/mongodb.key
+
+  # Third shard
+  prod-shard-03a:
+    image: mongo
+    command: mongod --auth --port 27020 --shardsvr --replSet mongo-shard-03 --dbpath /data/db --keyFile /mongodb.key
+    volumes:
+      - ./mongo-shard-scripts/prod/mongodb.key:/mongodb.key
+      - ./mongo-shard-scripts/prod/mongo-shard-03.init.js:/mongo-shard-03.init.js
+  prod-shard-03b:
+    image: mongo
+    command: mongod --auth --port 27020 --shardsvr --replSet mongo-shard-03 --dbpath /data/db --keyFile /mongodb.key
+    volumes:
+      - ./mongo-shard-scripts/prod/mongodb.key:/mongodb.key
+  prod-shard-03c:
+    image: mongo
+    command: mongod --auth --port 27020 --shardsvr --replSet mongo-shard-03 --dbpath /data/db --keyFile /mongodb.key
+    volumes:
+      - ./mongo-shard-scripts/prod/mongodb.key:/mongodb.key
+
+  # Mongo router
+  prod-router-01:
+    image: mongo
+    command: mongos --configdb mongo-configserver/prod-configserver-01:27017,prod-configserver-02:27017,prod-configserver-03:27017 --keyFile /mongodb.key --bind_ip_all
+    volumes:
+      - ./mongo-shard-scripts/prod/mongodb.key:/mongodb.key
+      - ./mongo-shard-scripts/prod/mongo-sharding.init.js:/mongo-sharding.init.js
+      - ./mongo-shard-scripts/prod/mongo-auth.init.js:/mongo-auth.init.js
+    # Can be useful if you need to access it from your current host within Robomongo or some other clients
+    ports:
+     - "27017:27017"
+    depends_on:
+      - prod-configserver-01
+      - prod-configserver-02
+      - prod-configserver-03
+      - prod-shard-01a
+      - prod-shard-01b
+      - prod-shard-01c
+      - prod-shard-02a
+      - prod-shard-02b
+      - prod-shard-02c
+      - prod-shard-03a
+      - prod-shard-03b
+      - prod-shard-03c
