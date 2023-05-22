@@ -6,17 +6,20 @@ services:
     image: mongo
     command: mongod --auth --port 27017 --configsvr --replSet mongo-configserver --dbpath /data/db --keyFile /mongodb.key
     volumes:
+      - ./config-volume/config-01:/data/db
       - ./mongodb.key:/mongodb.key
       - ./mongo-shard-scripts/mongo-configserver.init.js:/mongo-configserver.init.js
   mongo-configserver-02:
     image: mongo
     command: mongod --auth --port 27017 --configsvr --replSet mongo-configserver --dbpath /data/db --keyFile /mongodb.key
     volumes:
+      - ./config-volume/config-02:/data/db
       - ./mongodb.key:/mongodb.key
   mongo-configserver-03:
     image: mongo
     command: mongod --auth --port 27017 --configsvr --replSet mongo-configserver --dbpath /data/db --keyFile /mongodb.key
     volumes:
+      - ./config-volume/config-03:/data/db
       - ./mongodb.key:/mongodb.key
 
   # First shard
@@ -24,17 +27,20 @@ services:
     image: mongo
     command: mongod --auth --port 27018 --shardsvr --replSet mongo-shard-01 --dbpath /data/db --keyFile /mongodb.key
     volumes:
+      - ./db-volume/shard-01a:/data/db
       - ./mongodb.key:/mongodb.key
       - ./mongo-shard-scripts/mongo-shard-01.init.js:/mongo-shard-01.init.js
   mongo-shard-01b:
     image: mongo
     command: mongod --auth --port 27018 --shardsvr --replSet mongo-shard-01 --dbpath /data/db --keyFile /mongodb.key
     volumes:
+      - ./db-volume/shard-01b:/data/db
       - ./mongodb.key:/mongodb.key
   mongo-shard-01c:
     image: mongo
     command: mongod --auth --port 27018 --shardsvr  --replSet mongo-shard-01 --dbpath /data/db --keyFile /mongodb.key
     volumes:
+      - ./db-volume/shard-01c:/data/db
       - ./mongodb.key:/mongodb.key
 
   # Second shard
@@ -42,17 +48,20 @@ services:
     image: mongo
     command: mongod --auth --port 27019 --shardsvr --replSet mongo-shard-02 --dbpath /data/db --keyFile /mongodb.key
     volumes:
+      - ./db-volume/shard-02a:/data/db
       - ./mongodb.key:/mongodb.key
       - ./mongo-shard-scripts/mongo-shard-02.init.js:/mongo-shard-02.init.js
   mongo-shard-02b:
     image: mongo
     command: mongod --auth --port 27019 --shardsvr --replSet mongo-shard-02 --dbpath /data/db --keyFile /mongodb.key
     volumes:
+      - ./db-volume/shard-02b:/data/db
       - ./mongodb.key:/mongodb.key
   mongo-shard-02c:
     image: mongo
     command: mongod --auth --port 27019 --shardsvr --replSet mongo-shard-02 --dbpath /data/db --keyFile /mongodb.key
     volumes:
+      - ./db-volume/shard-02c:/data/db
       - ./mongodb.key:/mongodb.key
 
   # Third shard
@@ -60,27 +69,30 @@ services:
     image: mongo
     command: mongod --auth --port 27020 --shardsvr --replSet mongo-shard-03 --dbpath /data/db --keyFile /mongodb.key
     volumes:
+      - ./db-volume/shard-03a:/data/db
       - ./mongodb.key:/mongodb.key
       - ./mongo-shard-scripts/mongo-shard-03.init.js:/mongo-shard-03.init.js
   mongo-shard-03b:
     image: mongo
     command: mongod --auth --port 27020 --shardsvr --replSet mongo-shard-03 --dbpath /data/db --keyFile /mongodb.key
     volumes:
+      - ./db-volume/shard-03b:/data/db
       - ./mongodb.key:/mongodb.key
   mongo-shard-03c:
     image: mongo
     command: mongod --auth --port 27020 --shardsvr --replSet mongo-shard-03 --dbpath /data/db --keyFile /mongodb.key
     volumes:
-        - ./mongodb.key:/mongodb.key
+      - ./db-volume/shard-03c:/data/db
+      - ./mongodb.key:/mongodb.key
 
   # Mongo router
   mongo-router-01:
     image: mongo
     command: mongos --configdb mongo-configserver/mongo-configserver-01:27017,mongo-configserver-02:27017,mongo-configserver-03:27017 --keyFile /mongodb.key --bind_ip_all
     volumes:
-        - ./mongodb.key:/mongodb.key
-        - ./mongo-shard-scripts/mongo-sharding.init.js:/mongo-sharding.init.js
-        - ./mongo-shard-scripts/mongo-auth.init.js:/mongo-auth.init.js
+      - ./mongodb.key:/mongodb.key
+      - ./mongo-shard-scripts/mongo-sharding.init.js:/mongo-sharding.init.js
+      - ./mongo-shard-scripts/mongo-auth.init.js:/mongo-auth.init.js
     # Can be useful if you need to access it from your current host within Robomongo or some other clients
     ports:
      - "27017:27017"

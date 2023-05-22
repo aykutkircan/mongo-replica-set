@@ -19,9 +19,9 @@ docker exec -it mongodbdocker-mongo-shard-02a-1 sh -c "mongosh --port 27019 < /m
 docker exec -it mongodbdocker-mongo-shard-03a-1 sh -c "mongosh --port 27020 < /mongo-shard-03.init.js"
 
 ## Apply sharding configuration
-sleep 15
+sleep 10
 docker exec -it mongodbdocker-mongo-router-01-1 sh -c "mongosh --port 27017 < /mongo-sharding.init.js"
 
 sleep 2
-# ## Enable admin account
+## Enable admin account
 docker exec -it mongodbdocker-mongo-router-01-1 sh -c "mongosh --port 27017 < /mongo-auth.init.js"
