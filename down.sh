@@ -7,4 +7,4 @@ ENV="$1"
 
 docker-compose --file "docker-compose-${ENV}.yaml" down --volumes
 
-rm -rf ./mongodb.key
+rm -rf ./mongo-shard-scripts/${ENV}/mongodb.key

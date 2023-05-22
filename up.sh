@@ -9,8 +9,8 @@ ENV="$1"
 echo "ENV is: ${ENV}"
 
 ## Generate global auth key between cluster nodes
-openssl rand -base64 756 > ./mongodb.key
-chmod 600 ./mongodb.key
+openssl rand -base64 756 > ./mongo-shard-scripts/${ENV}/mongodb.key
+chmod 600 ./mongo-shard-scripts/${ENV}/mongodb.key
 
 ## Start the whole stack
 docker-compose --file "docker-compose-${ENV}.yaml" up -d
