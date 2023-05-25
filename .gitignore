@@ -2,3 +2,4 @@ node_modules/
 mongodb.key
 config-volume
 db-volume
+data

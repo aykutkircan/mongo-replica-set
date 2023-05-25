@@ -14,11 +14,25 @@
     # Usage :
     $ git clone git@github.com:aykutkircan/mongo-replica-set.git
     $ cd mongo-replica-set/
+
+if you are going to start the services for the first time
+you should add the '--init' flag
+
+    $ ./up.sh 'staging' --init
+    or
+    $ ./up.sh 'prod' --init
+    or
+    $ ./up.sh 'preprod' --init
+
+If you have installed the services before and you have db and config
+in the data folder in the root directory, you can continue as follows
+
     $ ./up.sh 'staging'
     or
     $ ./up.sh 'prod'
     or
     $ ./up.sh 'preprod'
+
 
 You can also edit mongo-auth.init.js to change admin credentials before turning up the cluster
 
@@ -38,3 +52,8 @@ You can also edit mongo-auth.init.js to change admin credentials before turning 
     $ ./down.sh 'prod'
     or
     $ ./down.sh 'prod'
+
+
+How to connect to your DB
+
+    $ mongodb://<username:password>@localhost:<port>/<your-db-nname>?authSource=admin

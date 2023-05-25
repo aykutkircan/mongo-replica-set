@@ -2,9 +2,19 @@
 
 export COMPOSE_PROJECT_NAME=docker
 
-## Environment
-ENV="$1"
+# Parametreleri yakala
+ENV=$1
+options=$2
 
-docker-compose --file "docker-compose-${ENV}.yaml" down --volumes
+# --volumes parametresine göre işlem yap
+if [[ "$options" == "--volumes" ]]; then
 
-rm -rf ./mongo-shard-scripts/${ENV}/mongodb.key
+  docker-compose --file "docker-compose-${ENV}.yaml" down --volumes
+  rm -rf ./mongo-shard-scripts/${ENV}/mongodb.key
+else
+
+  docker-compose --file "docker-compose-${ENV}.yaml" down
+
+fi
+
+

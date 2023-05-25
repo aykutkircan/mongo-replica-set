@@ -3,84 +3,97 @@ services:
 
   # Config servers for metadata
   prod-configserver-01:
-    image: mongo
+    image: mongo:5.0.3
     command: mongod --auth --port 27017 --configsvr --replSet mongo-configserver --dbpath /data/db --keyFile /mongodb.key
     volumes:
       - ./mongo-shard-scripts/prod/mongodb.key:/mongodb.key
       - ./mongo-shard-scripts/prod/mongo-configserver.init.js:/mongo-configserver.init.js
+      - ./data/prod/configserver-01-data:/data/db
   prod-configserver-02:
-    image: mongo
+    image: mongo:5.0.3
     command: mongod --auth --port 27017 --configsvr --replSet mongo-configserver --dbpath /data/db --keyFile /mongodb.key
     volumes:
       - ./mongo-shard-scripts/prod/mongodb.key:/mongodb.key
+      - ./data/prod/configserver-02-data:/data/db
   prod-configserver-03:
-    image: mongo
+    image: mongo:5.0.3
     command: mongod --auth --port 27017 --configsvr --replSet mongo-configserver --dbpath /data/db --keyFile /mongodb.key
     volumes:
       - ./mongo-shard-scripts/prod/mongodb.key:/mongodb.key
+      - ./data/prod/configserver-03-data:/data/db
 
   # First shard
   prod-shard-01a:
-    image: mongo
+    image: mongo:5.0.3
     command: mongod --auth --port 27018 --shardsvr --replSet mongo-shard-01 --dbpath /data/db --keyFile /mongodb.key
     volumes:
       - ./mongo-shard-scripts/prod/mongodb.key:/mongodb.key
       - ./mongo-shard-scripts/prod/mongo-shard-01.init.js:/mongo-shard-01.init.js
+      - ./data/prod/shard-01a-data:/data/db
   prod-shard-01b:
-    image: mongo
+    image: mongo:5.0.3
     command: mongod --auth --port 27018 --shardsvr --replSet mongo-shard-01 --dbpath /data/db --keyFile /mongodb.key
     volumes:
       - ./mongo-shard-scripts/prod/mongodb.key:/mongodb.key
+      - ./data/prod/shard-01b-data:/data/db
   prod-shard-01c:
-    image: mongo
+    image: mongo:5.0.3
     command: mongod --auth --port 27018 --shardsvr  --replSet mongo-shard-01 --dbpath /data/db --keyFile /mongodb.key
     volumes:
       - ./mongo-shard-scripts/prod/mongodb.key:/mongodb.key
+      - ./data/prod/shard-01c-data:/data/db
 
   # Second shard
   prod-shard-02a:
-    image: mongo
+    image: mongo:5.0.3
     command: mongod --auth --port 27019 --shardsvr --replSet mongo-shard-02 --dbpath /data/db --keyFile /mongodb.key
     volumes:
       - ./mongo-shard-scripts/prod/mongodb.key:/mongodb.key
       - ./mongo-shard-scripts/prod/mongo-shard-02.init.js:/mongo-shard-02.init.js
+      - ./data/prod/shard-02a-data:/data/db
   prod-shard-02b:
-    image: mongo
+    image: mongo:5.0.3
     command: mongod --auth --port 27019 --shardsvr --replSet mongo-shard-02 --dbpath /data/db --keyFile /mongodb.key
     volumes:
       - ./mongo-shard-scripts/prod/mongodb.key:/mongodb.key
+      - ./data/prod/shard-02b-data:/data/db
   prod-shard-02c:
-    image: mongo
+    image: mongo:5.0.3
     command: mongod --auth --port 27019 --shardsvr --replSet mongo-shard-02 --dbpath /data/db --keyFile /mongodb.key
     volumes:
       - ./mongo-shard-scripts/prod/mongodb.key:/mongodb.key
+      - ./data/prod/shard-02c-data:/data/db
 
   # Third shard
   prod-shard-03a:
-    image: mongo
+    image: mongo:5.0.3
     command: mongod --auth --port 27020 --shardsvr --replSet mongo-shard-03 --dbpath /data/db --keyFile /mongodb.key
     volumes:
       - ./mongo-shard-scripts/prod/mongodb.key:/mongodb.key
       - ./mongo-shard-scripts/prod/mongo-shard-03.init.js:/mongo-shard-03.init.js
+      - ./data/prod/shard-03a-data:/data/db
   prod-shard-03b:
-    image: mongo
+    image: mongo:5.0.3
     command: mongod --auth --port 27020 --shardsvr --replSet mongo-shard-03 --dbpath /data/db --keyFile /mongodb.key
     volumes:
       - ./mongo-shard-scripts/prod/mongodb.key:/mongodb.key
+      - ./data/prod/shard-03b-data:/data/db
   prod-shard-03c:
-    image: mongo
+    image: mongo:5.0.3
     command: mongod --auth --port 27020 --shardsvr --replSet mongo-shard-03 --dbpath /data/db --keyFile /mongodb.key
     volumes:
       - ./mongo-shard-scripts/prod/mongodb.key:/mongodb.key
+      - ./data/prod/shard-03c-data:/data/db
 
   # Mongo router
   prod-router-01:
-    image: mongo
+    image: mongo:5.0.3
     command: mongos --configdb mongo-configserver/prod-configserver-01:27017,prod-configserver-02:27017,prod-configserver-03:27017 --keyFile /mongodb.key --bind_ip_all
     volumes:
       - ./mongo-shard-scripts/prod/mongodb.key:/mongodb.key
       - ./mongo-shard-scripts/prod/mongo-sharding.init.js:/mongo-sharding.init.js
       - ./mongo-shard-scripts/prod/mongo-auth.init.js:/mongo-auth.init.js
+      - ./mongo-shard-scripts/prod/mongo-auth.js:/mongo-auth.js
     # Can be useful if you need to access it from your current host within Robomongo or some other clients
     ports:
      - "27017:27017"
