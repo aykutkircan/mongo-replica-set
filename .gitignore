@@ -1,5 +1,5 @@
 node_modules/
-mongodb.key
-config-volume
-db-volume
 data
+mongo-shard-scripts/prod/mongodb.key
+mongo-shard-scripts/preprod/mongodb.key
+mongo-shard-scripts/staging/mongodb.key
